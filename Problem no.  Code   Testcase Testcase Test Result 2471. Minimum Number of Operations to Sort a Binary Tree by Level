@@ -1,0 +1,124 @@
+// Date : 23 Dec 2024
+
+
+//  Greedy approach with cycle detection
+
+
+
+class Solution {
+private:
+    int minSwaps(vector<int>& arr) {
+        int n = arr.size();
+        // Store value and original position pairs
+        vector<pair<int, int>> pairs(n);
+        for (int i = 0; i < n; i++) {
+            pairs[i] = {arr[i], i};
+        }
+        
+        // Sort by values
+        sort(pairs.begin(), pairs.end());
+        
+        // Track visited indices
+        vector<bool> visited(n, false);
+        int swaps = 0;
+        
+        // Count cycles
+        for (int i = 0; i < n; i++) {
+            // Skip if already visited or in correct position
+            if (visited[i] || pairs[i].second == i) continue;
+            
+            // Find cycle size
+            int cycleSize = 0;
+            int j = i;
+            while (!visited[j]) {
+                visited[j] = true;
+                j = pairs[j].second;
+                cycleSize++;
+            }
+            
+            // Each cycle of size k needs (k-1) swaps
+            swaps += (cycleSize - 1);
+        }
+        
+        return swaps;
+    }
+    
+public:
+    int minimumOperations(TreeNode* root) {
+        if (!root) return 0;
+        
+        queue<TreeNode*> q{{root}};
+        int totalSwaps = 0;
+        
+        while (!q.empty()) {
+            int levelSize = q.size();
+            vector<int> levelValues;
+            levelValues.reserve(levelSize);  // Preallocation for efficiency
+            
+            // Process current level
+            for (int i = 0; i < levelSize; i++) {
+                TreeNode* node = q.front();
+                q.pop();
+                
+                levelValues.push_back(node->val);
+                
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+            
+            // Calculate minimum swaps for current level
+            totalSwaps += minSwaps(levelValues);
+        }
+        
+        return totalSwaps;
+    }
+};
+
+
+// Alternate  BFS + sort
+
+class Solution {
+public:
+    int minimumOperations(TreeNode* root) {
+        if (!root)
+            return 0;
+
+        queue<TreeNode*> q;
+        q.push(root);
+        int operations = 0;
+
+        while (!q.empty()) {
+            int size = q.size();
+            vector<int> level;
+
+            for (int i = 0; i < size; ++i) {
+                TreeNode* node = q.front();
+                q.pop();
+                level.push_back(node->val);
+                if (node->left)
+                    q.push(node->left);
+                if (node->right)
+                    q.push(node->right);
+            }
+
+            vector<int> sort_level = level;
+            sort(sort_level.begin(), sort_level.end());
+            unordered_map<int, int> mp;
+
+            for (int i = 0; i < level.size(); ++i) {
+                mp[level[i]] = i;
+            }
+
+            for (int i = 0; i < level.size(); ++i) {
+                while (level[i] != sort_level[i]) {
+                    ++operations;
+                    int cur = mp[sort_level[i]];
+                    mp[level[i]] = cur;
+                    swap(level[i], level[cur]);
+                }
+            }
+        }
+
+        return operations;
+    }
+};
