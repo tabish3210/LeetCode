@@ -1,9 +1,9 @@
+Problem number 2471. Minimum Number of Operations to Sort a Binary Tree by Level
+
+
 // Date : 23 Dec 2024
-
-
+// Approach 1
 //  Greedy approach with cycle detection
-
-
 
 class Solution {
 private:
@@ -74,7 +74,7 @@ public:
     }
 };
 
-
+// Approach 2
 // Alternate  BFS + sort
 
 class Solution {
