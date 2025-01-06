@@ -5,7 +5,7 @@ Problem Number  1769. Minimum Number of Operations to Move All Balls to Each Box
 // Date : 06 Jan 2025
 
 
-//Suffix array
+// Suffix array
 
 
 class Solution {
