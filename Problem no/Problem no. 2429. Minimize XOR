@@ -1,4 +1,4 @@
-PROBLEM NUMBER :: 2429. Minimize XOR
+PROBLEM NUMBER ::  2429. Minimize XOR
 
 // Date :: 15 Jan 2025
 
@@ -26,7 +26,9 @@ public:
 };
 
 
-/*  Approach 2: Modularized Helper Functions
+/* 
+     Approach 2: Modularized Helper Functions
+
 class Solution {
 public:
     int countSetBits(int num) {
@@ -65,4 +67,5 @@ public:
         return removeSetBits(num1, setBitsNum1 - setBitsNum2);
     }
 };
+
 */
