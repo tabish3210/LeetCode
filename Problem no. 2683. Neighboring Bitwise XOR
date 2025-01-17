@@ -1,0 +1,41 @@
+PROBLEM NUMBER :-  2683. Neighboring Bitwise XOR
+
+
+
+// DATE :: 18 Jan 2025
+
+
+/*
+Code C++ 1-liner||0ms beats 100% :-
+class Solution {
+public:
+    static bool doesValidArrayExist(vector<int>& derived) {
+        return accumulate(derived.begin(), derived.end(), 0, bit_xor<>())==0;
+    }
+};
+
+C++ reduce :-
+class Solution {
+public:
+    static bool doesValidArrayExist(vector<int>& derived) {
+        return reduce(derived.begin(), derived.end(), 0, bit_xor<>())==0;
+    }
+};
+
+C++ 2nd approach 1 -liner :-
+class Solution {
+public:
+    static bool doesValidArrayExist(vector<int>& derived) {
+        return (reduce(derived.begin(), derived.end(), 0)&1)==0;
+    }
+};
+*/
+
+// C solution uses loop||0ms :-
+
+static bool doesValidArrayExist(int* derived, int n) {
+    unsigned ans=0;
+    for(int i=0; i<n; i++)
+        ans^=derived[i];
+    return ans==0;
+}
