@@ -1,0 +1,44 @@
+PROBLEM NUMBER :: 2017. Grid Game
+
+// Date :: 21 Jan 2025
+
+// Prefix Sum || Robot Path Optimzation
+
+class Solution {
+public:
+    long long gridGame(vector<vector<int>>& grid) {
+        long long top = 0;
+        for (int i = 0; i < grid[0].size(); i++) {
+            top += grid[0][i];
+        }
+
+        long long bottom = 0, res = LLONG_MAX;
+        for (int i = 0; i < grid[0].size(); i++) {
+            top -= grid[0][i]; // First robot picks from the top row 
+            res = min(res, max(top, bottom)); // Minimize the maximum score for the second robot
+            bottom += grid[1][i]; // Second robot picks from the bottom row 🤖
+        }
+        return res; 
+    }
+};
+
+/////////////////////////////////////////////////
+
+// APPROACH 2
+// TOP BOTTOM NO SUFFIX
+class Solution {
+public:
+    long long gridGame(vector<vector<int>>& grid) {
+        long long min_result = LLONG_MAX;  // Start with a large number for the minimum score.
+        long long row1_sum = accumulate(grid[0].begin(), grid[0].end(), 0LL);  // Top row sum
+        long long row2_sum = 0;  // Bottom row sum starts at 0.
+
+        for (int i = 0; i < grid[0].size(); ++i) {
+            row1_sum -= grid[0][i];  // Move the top player forward, subtract current value.
+            min_result = min(min_result, max(row1_sum, row2_sum));  // Update the minimum of the max scores.
+            row2_sum += grid[1][i];  // Move the bottom player forward, add current value.
+        }
+
+        return min_result;  // Return the minimum maximum score.
+    }
+};
