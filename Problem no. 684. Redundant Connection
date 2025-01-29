@@ -1,0 +1,129 @@
+PROBLEM NUMBEER : 684. Redundant Connection
+
+// Date : 29 Jan 2025
+
+
+//Simple First Cycle/Union Find Two Solution First Connection
+// Using Union-Find (also known as Disjoint Set Union (DSU))
+
+class Solution {
+public:
+    
+    int findPar(int p,vector<int>par){
+        if(p==par[p]){
+            return p;
+        }
+        return findPar(par[p],par);
+    }//for finding the parent of a node in a given graph 
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+          vector<int> p(2000, 0);
+        for(int i = 0; i < p.size(); i++ )
+            p[i] = i;//parent vector taken initialised with a vaalue 
+        
+        vector<int> res;//res vector 
+        for(auto v : edges ){
+            int n1 = v[0], n2 = v[1];//n1 and n2 2 nodes taken 
+            while(n1 != p[n1]) n1 = p[n1];//while n1 is not the parent of n1 then we initialise with parent p[n1]
+            while(n2 != p[n2]) n2 = p[n2];//same goes with the n2 
+            if( n1 == n2 )//if both r same it is a possible edge which can be removed for making it a tree
+                res = v;
+            else//else we join n1 to n2 and make n2 the paren tof n1 
+                p[n1] = n2;
+        }//TC IS O(N)
+        return res;
+    }
+};
+
+///////////////////////////////////////////////////////
+
+// Approach 2nd ||  C++_STACK + Unordermap
+
+
+class Solution {
+public:
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        unordered_map<int, vector<int>> graph;
+
+        auto isConnected = [&](int u, int v) {
+            unordered_set<int> visited;
+            stack<int> stack;
+            stack.push(u);
+
+            while (!stack.empty()) {
+                int node = stack.top();
+                stack.pop();
+
+                if (visited.count(node)) continue;
+                visited.insert(node);
+
+                if (node == v) return true;
+
+                for (int neighbor : graph[node]) {
+                    stack.push(neighbor);
+                }
+            }
+            return false;
+        };
+
+        for (const auto& edge : edges) {
+            int u = edge[0], v = edge[1];
+
+            if (graph.count(u) && graph.count(v) && isConnected(u, v)) {
+                return edge;
+            }
+
+            graph[u].push_back(v);
+            graph[v].push_back(u);
+        }
+
+        return {};
+    }
+};
+
+
+////////////////////////////////////////////////
+
+/*
+
+  Approach 3rd ||  C++_UNIUON_FIND  
+
+class DisjointSet {
+    vector<int> parent, depth;
+public:
+    DisjointSet(int n) : parent(n), depth(n) {
+        depth.assign(n, 1);
+        iota(parent.begin(), parent.end(), 0);
+    }
+
+    int getRoot(int x) {
+        if (x == parent[x])
+            return x;
+        return parent[x] = getRoot(parent[x]);
+    }
+
+    bool merge(int x, int y) {
+        int rootX = getRoot(x), rootY = getRoot(y);
+        if (rootX == rootY)
+            return false;
+        if (depth[rootX] > depth[rootY])
+            swap(rootX, rootY);
+        parent[rootX] = rootY;
+        if (depth[rootX] == depth[rootY])
+            depth[rootY]++;
+        return true;
+    }
+};
+
+class Solution {
+public:
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        int n = edges.size();
+        DisjointSet ds(n + 1);
+        for (auto& edge : edges)
+            if (!ds.merge(edge[0], edge[1])) return edge;
+        return {};
+    }
+};
+
+
+*/
