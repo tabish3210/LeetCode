@@ -1,0 +1,76 @@
+PROBLEM NUMBER : 1752. Check if Array Is Sorted and Rotated
+
+// Date : 02 Feb 2025
+
+
+/*
+   Approach 1 :- 
+  1. Traverse the array and count how many times nums[i] > nums[i+1].
+  2. If this count is greater than 1, it is not a rotated sorted array.
+  3. If there is only one break point, ensure that nums[last] <= nums[first] to maintain     sorted rotation.
+  4. If there are no break points, it is already sorted.
+
+*/
+
+class Solution {
+public:
+    bool check(vector<int>& nums) {
+        if (nums.size() == 1) {
+            return true;
+        }
+        int i = 0;
+        while (i < nums.size() - 1 && nums[i + 1] >= nums[i]) {
+            i++;
+        }
+        if (i == nums.size()-1) {
+            return true;
+        }
+        i++;
+        while (i < nums.size() - 1 && nums[i + 1] >= nums[i] && nums[i] <= nums[0]) {
+            i++;
+        }
+
+        if (i == nums.size()-1 && nums[i] <= nums[0]) {
+            return true;
+        }
+        return false;
+    }
+};
+
+///////////////////////////////////////////////////////////////
+
+
+Intuition 🤔
+The problem asks us to check if an array can become sorted after performing at most one rotation. Think of it like a circular array where we need to find "breaks" in the ascending pattern! 🔄
+
+Approach 🛠️
+🔍 Iterate through the array and check each adjacent pair
+⭕ Use modulo operator (%) for wrap-around handling (like connecting the last and first elements)
+📝 Count places where order breaks (current element > next element)
+❌ If we find more than one break, return false (impossible to sort with one rotation)
+✅ If only one or zero breaks found, return true (possible to sort!)
+Complexity ⚙️
+Time complexity: O(n) ⏱️ - We visit each element exactly once
+Space complexity: O(1) 📦 - We only use two variables (count and n)
+Example Visualization 🎨
+For array [3,4,5,1,2]:
+
+Original: [3,4,5,1,2] ➡️ One break at 5->1
+After rotation: [1,2,3,4,5] ✨ Perfect!
+
+////////////////////////////////////////////////   Code   ////////////////////////////////////////////////////
+class Solution {
+public:
+    bool check(vector<int>& nums) {
+        int count = 0, n = nums.size();
+        
+        for (int i = 0; i < n; i++) {
+            if (nums[i] > nums[(i + 1) % n]) 
+                count++;
+            if (count > 1) 
+                return false;
+        }
+        
+        return true;
+    }
+};
