@@ -1,0 +1,86 @@
+PROBLEM NIUMBER :  3105. Longest Strictly Increasing or Strictly Decreasing Subarray
+
+// Date : 03 Feb 2025
+
+🧠 Intuition
+The problem requires finding the longest contiguous increasing or decreasing subarray in a given array.
+
+We can iterate through the array while maintaining two counters:
+One for increasing sequences
+One for decreasing sequences
+By updating these counters, we can determine the longest monotonic subarray efficiently.
+🔍 Approach
+Initialize two variables INC and DEC to track the lengths of increasing and decreasing subarrays.
+Traverse the array while comparing consecutive elements:
+If nums[i] < nums[i+1], increase INC, else reset and update INC_MAX.
+If nums[i] > nums[i+1], increase DEC, else reset and update DEC_MAX.
+Return the maximum of INC_MAX and DEC_MAX.
+⏳ Complexity
+Time Complexity: 🕒 O(n)
+We traverse the array once, making the approach linear.
+Space Complexity: 💾 O(1)
+Only a few extra variables are used, leading to constant space usage.
+
+
+💻 Code
+
+class Solution {
+public:
+    int longestMonotonicSubarray(vector<int>& nums) {
+        int INC = 1;
+        int INC_MAX = 1;
+        int DEC = 1;
+        int DEC_MAX = 1;
+        for (int i = 0; i < nums.size() - 1; i++) {
+            if (nums[i] < nums[i + 1]) {
+                INC++;
+            } else {
+                INC_MAX = max(INC, INC_MAX);
+                INC = 1;
+            }
+            if (nums[i] > nums[i + 1]) {
+                DEC++;
+            } else {
+                DEC_MAX = max(DEC, DEC_MAX);
+                DEC = 1;
+            }
+        }
+
+        INC_MAX = max(INC, INC_MAX);
+        DEC_MAX = max(DEC, DEC_MAX);
+        return max(INC_MAX, DEC_MAX);
+    }
+};
+
+
+////////////////////////////////////////////////
+
+// More Simple
+
+class Solution {
+public:
+    int longestMonotonicSubarray(vector<int>& nums) {
+        if (nums.empty())
+            return 0;
+
+        int maxLength = 1;
+        int inc = 1, dec = 1;
+
+        for (int i = 1; i < nums.size(); ++i) {
+            if (nums[i] > nums[i - 1]) {
+                inc += 1;
+                dec = 1;
+            } else if (nums[i] < nums[i - 1]) {
+                dec += 1;
+                inc = 1;
+            } else {
+                inc = 1;
+                dec = 1;
+            }
+
+            maxLength = max(maxLength, max(inc, dec));
+        }
+
+        return maxLength;
+    }
+};
