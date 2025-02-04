@@ -1,0 +1,54 @@
+PROBLEM NUMBER : 1800. Maximum Ascending Subarray Sum
+
+Intuition
+The problem requires finding the maximum sum of a strictly increasing subarray in a given array.
+The key observation is that as long as numbers are increasing, we keep adding them to a sum.
+Whenever a decrease is encountered, we compare and update the maximum sum found so far.
+
+Approach
+Initialize variables:
+
+ans to store the maximum ascending sum.
+cs (current sum) to accumulate values of an ascending subarray.
+Iterate through the array:
+
+If nums[i] < nums[i+1], add nums[i] to cs.
+Otherwise:
+Update ans with max(ans, cs + nums[i]).
+Reset cs to 0.
+Ensure ans is updated with max(ans, nums[i]) (handling single-element cases).
+Handle the last element separately:
+
+If nums[n-1] > nums[n-2], add it to cs and update ans.
+Complexity
+Time complexity:
+O(n), as we traverse the array once.
+Space complexity:
+O(1), since we use only a few extra variables.
+
+Code :-
+
+class Solution {
+public:
+    int maxAscendingSum(vector<int>& nums) {
+        if (nums.size() == 1) {
+            return nums[0];
+        }
+        int ans = -1;
+        int cs = 0;
+        for (int i = 0; i < nums.size() - 1; i++) {
+            if (nums[i] < nums[i + 1]) {
+                cs += nums[i];
+            } else {
+                ans = max(ans, cs + nums[i]);
+                cs = 0;
+                ans = max(ans, nums[i]);
+            }
+        }
+        if (nums[nums.size() - 1] > nums[nums.size() - 2]) {
+            ans = max(ans, cs + nums[nums.size() - 1]);
+            ans = max(ans, nums[nums.size() - 1]);
+        }
+        return ans;
+    }
+};
