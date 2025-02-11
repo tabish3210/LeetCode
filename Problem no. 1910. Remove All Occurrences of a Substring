@@ -1,0 +1,17 @@
+PROBELEM NUMBER :-    1910. Remove All Occurrences of a Substring
+
+// Date : 11 Feb 2025
+
+// EASY METHOD || STACK || Simulation
+
+class Solution {
+public:
+    string removeOccurrences(string s, string part) {
+        size_t index = s.find(part);
+        while (index != string::npos) {
+            s.erase(index, part.length());
+            index = s.find(part);
+        }
+        return s;
+    }
+};
