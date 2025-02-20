@@ -1,0 +1,110 @@
+PROBLEM NUNBER  :-  1980. Find Unique Binary String
+
+
+Method 1 - Brute Force (Slow) (TC - O(2^n * n), SC - O(2^n))
+
+Explanation
+Store nums in a set for quick lookup.
+Generate all possible n-bit binary strings.
+Check if each one exists in the set.
+Return the first missing binary string.
+class Solution {
+public:
+    string findDifferentBinaryString(vector<string>& nums) {
+        unordered_set<string> s(nums.begin(), nums.end());
+        int n = nums.size();
+        
+        for (int i = 0; i < (1 << n); i++) { 
+            string binary = bitset<16>(i).to_string().substr(16 - n);
+            if (!s.count(binary)) {
+                return binary;
+            }
+        }
+        return "";
+    }
+};
+Method 2 - Backtracking (Better) (TC - O(2^n), SC - O(n))
+
+Explanation
+Uses recursion to generate all n-bit binary strings.
+If a string is not in nums, return it immediately.
+Backtracks to explore other possibilities.
+class Solution {
+public:
+    string findDifferentBinaryString(vector<string>& nums) {
+        unordered_set<string> s(nums.begin(), nums.end());
+        string curr;
+        return generateBinaryString(nums.size(), s, curr);
+    }
+    
+    string generateBinaryString(int n, unordered_set<string>& set, string& curr) {
+        if (curr.size() == n) {
+            return set.count(curr) ? "" : curr;
+        }
+        curr.push_back('0');
+        string res = generateBinaryString(n, set, curr);
+        if (!res.empty()) return res;
+        curr.back() = '1';
+        res = generateBinaryString(n, set, curr);
+        if (!res.empty()) return res;
+        curr.pop_back();
+        return "";
+    }
+};
+Method 3 - Memoization (More Efficient) (TC - O(n), SC - O(n))
+
+Explanation
+Uses recursion with memoization to avoid redundant calculations.
+Stores results in dp to prevent re-computation.
+Generates missing binary strings by appending '0' or '1'.
+class Solution {
+    string help(vector<string>& nums, vector<string>& dp, int i,const string& s, set<string>& sets) {
+        if (i < 0) {
+            return s;
+        }
+        if (i == 0) {
+            if (sets.find(s) == sets.end()) {
+                return s;
+            }
+            return "";
+        }
+        if (!dp[i].empty()) {
+            return dp[i];
+        }
+        string op1 = s + '0';
+        dp[i] = help(nums, dp, i - 1, op1, sets);
+        if (!dp[i].empty()) {
+            return dp[i];
+        }
+        string op2 = s + '1';
+        dp[i] = help(nums, dp, i - 1, op2, sets);
+        return dp[i];
+    }
+
+public:
+    string findDifferentBinaryString(vector<string>& nums) {
+        set<string> sets(nums.begin(), nums.end());
+        vector<string> dp(nums.size() + 1, "");
+        string s = "";
+        return help(nums, dp, nums.size(), s, sets);
+    }
+};
+Method 4 - Cantor’s Trick (Best) (TC - O(n), SC - O(n))
+
+Explanation
+Uses Cantor's Diagonalization to construct a missing string.
+Flip the diagonal elements (nums[i][i]):
+If nums[i][i] is '0', append '1'.
+If nums[i][i] is '1', append '0'.
+Ensures the result is unique and missing from nums.
+
+class Solution {
+public:
+    string findDifferentBinaryString(vector<string>& nums) {
+        string ans = "";
+        for (int i = 0; i < nums.size(); i++) {
+            ans += (nums[i][i] == '0') ? '1' : '0'; 
+        }
+        return ans;
+    }
+};
