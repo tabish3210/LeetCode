@@ -1,0 +1,32 @@
+PROBLEM NUMBER   :-   1524. Number of Sub-arrays With Odd Sum
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+//Approach2:Prefix Sum with Hash Map
+
+class Solution {
+public:
+    int numOfSubarrays(std::vector<int>& arr) {
+        const int MOD = 1000000007;
+        std::unordered_map<int, int> prefixCount;
+        prefixCount[0] = 1; // Prefix sum of 0 is even
+        int prefixSum = 0;
+        int result = 0;
+
+        for (int num : arr) {
+            prefixSum += num;
+            if (prefixSum % 2 == 1) {
+                // If prefixSum is odd, count the number of even prefix sums
+                result = (result + prefixCount[0]) % MOD;
+            } else {
+                // If prefixSum is even, count the number of odd prefix sums
+                result = (result + prefixCount[1]) % MOD;
+            }
+            // Update the frequency of the current prefixSum (odd or even)
+            prefixCount[prefixSum % 2]++;
+        }
+
+        return result;
+    }
+};
