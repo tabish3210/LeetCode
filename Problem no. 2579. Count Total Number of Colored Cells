@@ -1,0 +1,32 @@
+PROBLEM NUMBER :- 2579. Count Total Number of Colored Cells
+
+// Date : 05 Mar 2025
+
+
+// 1-liner O(1)
+
+class Solution {
+public:
+    long long coloredCells(int n) {
+        return 2LL*n*(n-1)+1;
+    }
+};
+////////////////////////////////////////////////////////////////////////
+
+/*
+
+//  Iterative Approach
+
+class Solution {
+public:
+    long long coloredCells(int n) {
+        long long count = 1;
+        n--;
+        while(n > 0){
+            count += n * 4;
+            n--;
+        }
+        return count;
+    }
+};
+*/
