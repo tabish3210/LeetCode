@@ -1,0 +1,77 @@
+PROBLEM NUMBER       :-         2033. Minimum Operations to Make a Uni-Value Grid
+
+
+
+
+// Date : 26 Mar 2025
+
+
+//    Sorting & Median 
+
+class Solution {
+public:
+    int minOperations(vector<vector<int>>& grid, int x) {
+        vector<int> values;
+        for (const auto& row : grid) {
+            for (int val : row) {
+                values.push_back(val);
+            }
+        }
+
+        sort(values.begin(), values.end());
+
+        for (int val : values) {
+            if (abs(val - values[0]) % x != 0) {
+                return -1;
+            }
+        }
+
+        int median = values[values.size() / 2];
+        int operations = 0;
+
+        for (int val : values) {
+            operations += abs(val - median) / x;
+        }
+
+        return operations;
+    }
+};
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// SECOND METHOD
+
+// SIMPLE SORTING
+
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+    int minOperations(vector<vector<int>>& grid, int x) {
+        vector<int> all;
+        
+        for (auto& row : grid) {
+            for (int num : row) {
+                all.push_back(num);
+            }
+        }
+
+        int mod = all[0] % x;
+        for (int num : all) {
+            if (num % x != mod) return -1;
+        }
+
+        sort(all.begin(), all.end());
+        int median = all[all.size() / 2];
+        int operations = 0;
+
+        for (int num : all) {
+            operations += abs(num - median) / x;
+        }
+
+        return operations;
+    }
+};
