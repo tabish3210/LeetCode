@@ -1,0 +1,54 @@
+PROBLEM NUMBER                :-               3375. Minimum Operations to Make Array Values Equal to K
+
+// Date : 09 Apr 2025
+
+
+//  Use bitset & a single loop.
+
+class Solution {
+public:
+    static int minOperations(vector<int>& nums, int k) {
+        bitset<101> hasX=0;
+        int xMin=101;
+        [[unroll]]
+        for(int x: nums){
+            hasX[x]=1;
+            xMin=min(x, xMin);
+        }
+        if (xMin<k) return -1;
+        return (xMin==k)?hasX.count()-1:hasX.count();
+    }
+};
+auto init = []() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+    return 'c';
+}();
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+// 2nd method 
+
+// Unique count 
+
+class Solution {
+public:
+    int minOperations(vector<int>& nums, int k) {
+        int ans = 0;
+        unordered_map<int, int> M;
+        for (int a : nums) {
+            // If any number is less than k, operation can't proceed
+            if (a < k) {
+                return -1;
+            }
+            M[a]++;
+            // Count only the first appearance of elements greater than k
+            if(a != k && M[a] == 1){
+                ans++;
+            }
+        }
+        return ans;
+    }
+};
