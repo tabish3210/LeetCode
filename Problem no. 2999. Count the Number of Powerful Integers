@@ -1,0 +1,96 @@
+PROBLEM NUMBER               :-                2999.  Count the Number of Powerful Integers
+
+// Date : 10 Apr 2025
+
+
+//  Compute Permutations
+
+long long tens[17];
+long long powB[17];
+class Solution {
+public:
+    void compute_tens(){
+        if (tens[0]==1) return;
+        tens[0]=1;
+        for(int i=1; i<17; i++)
+            tens[i]=tens[i-1]*10LL;
+    }
+    void compute_powB(int B){
+        powB[0]=1;
+        for(int i=1; i<17; i++)
+            powB[i]=powB[i-1]*B;
+    }
+
+    long long cnt(long long x, long long sn, int ds, int limit){
+        if (x<sn) return 0;
+        long long x0=x, rem=x0%tens[ds];
+        x0/=tens[ds];
+        int d=lower_bound(tens, tens+17, x0)-tens;
+        long long cnt=0;
+        for( int i=d; i>=0; i--){//MSDF
+            auto [q, r]=ldiv(x0, tens[i]);
+            if (q>limit){
+                cnt+=powB[i+1];
+                return cnt;
+            }
+            cnt+=powB[i]*q;
+            x0-=q*tens[i];
+        }
+        return cnt+(rem>=sn);
+    }
+    long long numberOfPowerfulInt(long long start, long long finish, int limit, string& s) {
+        compute_tens();
+        compute_powB(limit+1);
+        long long sn=stoll(s);
+        int ds=s.size(), d0=log10(start)+1, d1=log10(finish)+1;
+        return cnt(finish, sn, ds, limit)-cnt(start-1, sn, ds, limit);
+    }
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// 2nd Method
+
+// Date : 10 Apr 2025
+
+
+// DP
+
+class Solution {
+public:
+    long long numberOfPowerfulInt(long long start, long long finish, int limit, string s) {
+        return countChakraShinobi(finish, limit, s) - countChakraShinobi(start - 1, limit, s);
+    }
+
+private:
+    long long countChakraShinobi(long long val, int limit, const string& clanSymbol) {
+        string chakraFlow = to_string(val);  // Represent the chakra stream (digits of the number)
+        int prefixLength = chakraFlow.length() - clanSymbol.length();  // Space left for chakra prefix
+
+        if (prefixLength < 0) return 0;  // Not enough room for the suffix
+
+        // rasenganScroll[i][tightMode] -> DP table: tightMode = 0 (free), 1 (bound to value)
+        vector<vector<long long>> rasenganScroll(prefixLength + 1, vector<long long>(2, 0));
+
+        // Base case: we’ve formed all prefix digits, now check suffix validity
+        rasenganScroll[prefixLength][0] = 1;  // Free path
+        rasenganScroll[prefixLength][1] = chakraFlow.substr(prefixLength) >= clanSymbol ? 1 : 0;
+
+        // Moving backward through the chakra path
+        for (int i = prefixLength - 1; i >= 0; --i) {
+            int currentChakra = chakraFlow[i] - '0';
+
+            // Not tight to upper bound → try all digits from 0 to limit
+            rasenganScroll[i][0] = (limit + 1) * rasenganScroll[i + 1][0];
+
+            // Tight case: digits must be ≤ current digit in value
+            if (currentChakra <= limit) {
+                rasenganScroll[i][1] = (long long) currentChakra * rasenganScroll[i + 1][0] + rasenganScroll[i + 1][1];
+            } else {
+                rasenganScroll[i][1] = (long long)(limit + 1) * rasenganScroll[i + 1][0];
+            }
+        }
+
+        return rasenganScroll[0][1];  // Final count from top of chakra flow
+    }
+};
