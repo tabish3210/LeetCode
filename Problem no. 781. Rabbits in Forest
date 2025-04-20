@@ -1,0 +1,43 @@
+PROBLEM   NUMBER                                     :-                                     781. Rabbits in Forest
+
+// Date : 20 Apr 2025
+
+
+// Hashmap Implementation
+
+class Solution {
+public:
+    int numRabbits(vector<int>& nums, int total = 0) {
+        unordered_map <int,int> mpp;
+        for (int i : nums) mpp[i]++;
+
+        for (auto& p : mpp)
+        total += ceil((double)p.second / (p.first + 1)) * (p.first + 1);
+        return total;
+    }
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// Sort 
+
+class Solution {
+public:
+    int numRabbits(vector<int>& answers) {
+        sort(answers.begin(), answers.end());
+        int res = 0, count = 0;
+
+        for (int i = 0; i < answers.size(); ++i) {
+            if (answers[i] == 0) {
+                res++;  // 🐇 
+            } else if (i == 0 || answers[i] != answers[i - 1] || count == 0) {
+                res += answers[i] + 1;  
+                count = answers[i];   
+            } else {
+                count--; 
+            }
+        }
+        return res;
+    }
+};
