@@ -1,0 +1,47 @@
+PROBLEM  NUMBER                                  :-                                               2444. Count Subarrays With Fixed Bounds
+
+// Date : 26 Apr 2025
+
+
+// Approach --> We’ll use a single-pass algorithm to count fixed-bound subarrays by maintaining the positions of minK, maxK, and invalid elements.
+
+class Solution {
+public:
+    long long countSubarrays(vector<int>& nums, int minK, int maxK) {
+        int pMin = -1, pMax = -1, bad = -1;
+        long long ans = 0;
+        
+        for (int i = 0; i < nums.size(); ++i) {
+            if (nums[i] == minK) pMin = i;
+            if (nums[i] == maxK) pMax = i;
+            if (nums[i] < minK || nums[i] > maxK) bad = i;
+            if (pMin != -1 && pMax != -1) {
+                ans += max(0, min(pMin, pMax) - bad);
+            }
+        }
+        return ans;
+    }
+};
+
+/*
+                                                  
+                                                                   Pseudocode
+function countSubarrays(nums, minK, maxK):
+    pMin = -1  # Last index of minK
+    pMax = -1  # Last index of maxK
+    bad = -1   # Last index of invalid element (< minK or > maxK)
+    ans = 0    # Count of valid subarrays
+
+    for i from 0 to nums.length - 1:
+        if nums[i] == minK:
+            pMin = i
+        if nums[i] == maxK:
+            pMax = i
+        if nums[i] < minK or nums[i] > maxK:
+            bad = i
+        if pMin != -1 and pMax != -1:
+            ans += max(0, min(pMin, pMax) - bad)
+
+    return ans
+
+*/
