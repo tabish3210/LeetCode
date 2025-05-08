@@ -1,0 +1,126 @@
+PROBLEM  NUMBER                                                              :-                                                             3342. Find Minimum Time to Reach Last Room II
+
+// Date : 08 May 2025
+
+
+// DIJKSTRAS LIKE BFS
+
+class Solution {
+public:
+    int minTimeToReach(vector<vector<int>>& t) {
+        int n = t.size(), m = t[0].size();
+        vector<vector<vector<int>>> dp(n, vector<vector<int>>(m, vector<int>(2, INT_MAX)));
+
+        using State = tuple<int, int, int>;
+        using PQNode = pair<int, State>;
+        priority_queue<PQNode, vector<PQNode>, greater<>> pq;
+
+        dp[0][0][0] = 0;
+        pq.push({0, {0, 0, 0}});
+
+        vector<pair<int,int>> dir{{-1,0},{1,0},{0,-1},{0,1}};
+
+        while (!pq.empty()) {
+            auto [time, state] = pq.top(); pq.pop();
+            auto [x, y, parity] = state;
+
+            if (dp[x][y][parity] < time) continue;
+
+            for (auto [dx, dy] : dir) {
+                int nx = x + dx, ny = y + dy;
+                if (nx < 0 || ny < 0 || nx >= n || ny >= m) continue;
+
+                int wait_time = max(time, t[nx][ny]);
+                int next_parity = 1 - parity;
+                int next_time = wait_time + 1 + parity;
+
+                if (nx == n - 1 && ny == m - 1)
+                    return next_time;
+
+                if (dp[nx][ny][next_parity] <= next_time) continue;
+
+                dp[nx][ny][next_parity] = next_time;
+                pq.push({next_time, {nx, ny, next_parity}});
+            }
+        }
+
+        return -1;
+    }
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Date : 08 May 2025
+
+
+// Dijkstra + Greedy 
+
+class Solution 
+{
+    const vector<vector<int>> directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+    struct Cell 
+    {
+        int time, row, col;
+        bool operator>(const Cell& other) const 
+        {
+            return time > other.time;
+        }
+    };
+
+public:
+    int minTimeToReach(vector<vector<int>>& moveTime) 
+    {
+        // Step 1: Initialize variables
+        int m = moveTime.size();
+        int n = moveTime[0].size();
+        vector<vector<int>> result(m, vector<int>(n, INT_MAX)); // stores minimum time to reach each cell
+
+        // Step 2: Priority queue to process cells by minimum time
+        priority_queue<Cell, vector<Cell>, greater<Cell>> pq;
+        result[0][0] = 0;
+        pq.push({0, 0, 0}); // Starting at cell (0,0) at time 0
+
+        // Step 3: Dijkstra's loop - process the shortest-time cell
+        while (!pq.empty()) 
+        {
+            Cell curr = pq.top(); pq.pop();
+
+            // Step 4: If destination is reached, return the time
+            if (curr.row == m - 1 && curr.col == n - 1)
+            {
+                return curr.time;
+            }
+
+            // Step 5: Explore all four directions
+            for (auto& dir : directions) 
+            {
+                int newRow = curr.row + dir[0];
+                int newCol = curr.col + dir[1];
+
+                // Step 6: Check bounds
+                if (newRow >= 0 && newRow < m && newCol >= 0 && newCol < n) 
+                {
+                    // Step 7: Calculate move cost based on parity of coordinates
+                    int moveCost = ((newRow + newCol) % 2 == 0) ? 2 : 1;
+
+                    // Step 8: Calculate wait time if moveTime has not elapsed
+                    int wait = max(moveTime[newRow][newCol] - curr.time, 0);
+
+                    // Step 9: Compute total time to arrive at new cell
+                    int arrivalTime = curr.time + wait + moveCost;
+
+                    // Step 10: Update result and priority queue if found better path
+                    if (result[newRow][newCol] > arrivalTime) 
+                    {
+                        result[newRow][newCol] = arrivalTime;
+                        pq.push({arrivalTime, newRow, newCol});
+                    }
+                }
+            }
+        }
+
+        // Step 11: Return -1 if destination can't be reached
+        return -1;
+    }
+};
