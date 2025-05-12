@@ -1,0 +1,82 @@
+PROBLEM NUMBER                                                     :-                                                   2094. Finding 3-Digit Even Numbers
+
+
+// Date : 12 May 2025
+
+
+// Using Enumeration
+
+class Solution {
+public:
+    vector<int> findEvenNumbers(vector<int>& digits) {
+        vector<int> mpp(10, 0);
+        for (int i = 0; i < digits.size(); i++)
+            mpp[digits[i]]++;
+
+        vector<int> res;
+        for (int i = 1; i <= 9; i++) {
+            if (mpp[i] == 0) continue;
+            mpp[i]--;
+
+            for (int j = 0; j <= 9; j++) {
+                if (mpp[j] == 0) continue;
+                mpp[j]--;
+                for (int k = 0; k <= 8; k += 2) {
+                    if (mpp[k] == 0) continue;
+                    mpp[k]--;
+                    res.push_back(i*100 + j*10 + k);
+                    mpp[k]++;
+                }
+                mpp[j]++;
+
+            }
+            mpp[i]++;
+        }
+        return res;
+    }
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+// Brute Force + 3 Pass || Hash Table
+
+class Solution 
+{
+public:
+    std::vector<int> findEvenNumbers(std::vector<int>& digits) 
+    {
+        std::set<int> set;
+
+        // Step 1: Try all 3-digit combinations
+        for (int i = 0; i < digits.size(); i++) 
+        {
+            for (int j = 0; j < digits.size(); j++) 
+            {
+                for (int k = 0; k < digits.size(); k++) 
+                {
+                    // Step 2: Ensure indices are distinct
+                    if (i == j || i == k || j == k)
+                    {
+                        continue;
+                    }
+
+                    int num = digits[i] * 100 + digits[j] * 10 + digits[k];
+
+                    // Step 3: Check if valid even number
+                    if (digits[i] != 0 && num % 2 == 0)
+                    {
+                        set.insert(num);
+                    }
+                }
+            }
+        }
+
+        // Step 4: Copy to vector and return
+        std::vector<int> result(set.begin(), set.end());
+        return result;
+    }
+};
