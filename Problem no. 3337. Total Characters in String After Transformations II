@@ -1,0 +1,145 @@
+PROBLEM    NUMBER                                                                  :-                                                3337. Total Characters in String After Transformations II
+
+// Date : 14 May 2025
+
+
+// Using Matrix Exponentiation 
+
+using ll = long long;
+
+class Solution {
+public:
+    const int mod = 1e9 + 7;
+
+    vector<vector<ll>> multiplyMatrices(const vector<vector<ll>> &A, const vector<vector<ll>> &B) {
+        int rowsA = A.size(), colsA = A[0].size(), colsB = B[0].size();
+        vector<vector<__int128_t>> temp(rowsA, vector<__int128_t>(colsB, 0));
+        vector<vector<ll>> result(rowsA, vector<ll>(colsB, 0));
+
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsB; j++) {
+                for (int k = 0; k < colsA; k++) {
+                    temp[i][j] += A[i][k] * B[k][j];
+                }
+                result[i][j] = temp[i][j] % mod;
+            }
+        }
+        return result;
+    }
+
+    vector<vector<ll>> powerMatrix(vector<vector<ll>> matrix, ll exponent) {
+        vector<vector<ll>> result(matrix.size(), vector<ll>(matrix.size(), 0));
+
+        for (int i = 0; i < matrix.size(); i++) result[i][i] = 1;
+
+        while (exponent > 0) {
+            if (exponent % 2 == 1) result = multiplyMatrices(result, matrix);
+            matrix = multiplyMatrices(matrix, matrix);
+            exponent /= 2;
+        }
+        return result;
+    }
+
+    int lengthAfterTransformations(string s, int t, vector<int>& nums) {
+        vector<vector<ll>> transform(26, vector<ll>(26, 0));
+
+        for (int i = 0; i < 26; i++) {
+            for (int shift = 0; shift < nums[i]; shift++) {
+                transform[i][(i + 1 + shift) % 26]++;
+            }
+        }
+
+        transform = powerMatrix(transform, t);
+        vector<vector<ll>> freq(1, vector<ll>(26, 0));
+        for (char ch : s) {
+            freq[0][ch - 'a']++;
+        }
+
+        freq = multiplyMatrices(freq, transform);
+        int totalLength = 0;
+        for (int count : freq[0]) {
+            totalLength += count;
+            if (totalLength >= mod) totalLength -= mod;
+        }
+
+        return totalLength;
+    }
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////         OR             //////////////////////////////////////////////////////////////////////////////
+
+
+#include <vector>
+#include <string>
+using namespace std;
+
+const int MOD = 1e9 + 7;
+
+class Solution {
+public:
+    int lengthAfterTransformations(const string& s, int t, const vector<int>& nums) {
+        vector<vector<int>> T = getTransformationMatrix(nums);
+        vector<vector<int>> poweredT = matrixPow(T, t);
+        vector<int> count(26, 0);
+        vector<int> lengths(26, 0);
+
+        for (char c : s) {
+            count[c - 'a']++;
+        }
+
+        for (int i = 0; i < 26; i++) {
+            for (int j = 0; j < 26; j++) {
+                lengths[j] = (lengths[j] + 1LL * count[i] * poweredT[i][j] % MOD) % MOD;
+            }
+        }
+
+        int total = 0;
+        for (int len : lengths) {
+            total = (total + len) % MOD;
+        }
+
+        return total;
+    }
+
+private:
+    vector<vector<int>> getTransformationMatrix(const vector<int>& nums) {
+        vector<vector<int>> T(26, vector<int>(26, 0));
+        for (int i = 0; i < nums.size(); i++) {
+            for (int step = 1; step <= nums[i]; step++) {
+                T[i][(i + step) % 26]++;
+            }
+        }
+        return T;
+    }
+
+    vector<vector<int>> getIdentityMatrix(int size) {
+        vector<vector<int>> I(size, vector<int>(size, 0));
+        for (int i = 0; i < size; i++) {
+            I[i][i] = 1;
+        }
+        return I;
+    }
+
+    vector<vector<int>> matrixMult(const vector<vector<int>>& A, const vector<vector<int>>& B) {
+        int size = A.size();
+        vector<vector<int>> C(size, vector<int>(size, 0));
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                long long sum = 0;
+                for (int k = 0; k < size; k++) {
+                    sum = (sum + 1LL * A[i][k] * B[k][j]) % MOD;
+                }
+                C[i][j] = sum;
+            }
+        }
+        return C;
+    }
+
+    vector<vector<int>> matrixPow(const vector<vector<int>>& M, int n) {
+        if (n == 0) return getIdentityMatrix(M.size());
+        if (n % 2 == 1) return matrixMult(M, matrixPow(M, n - 1));
+        vector<vector<int>> half = matrixPow(M, n / 2);
+        return matrixMult(half, half);
+    }
+};
+
