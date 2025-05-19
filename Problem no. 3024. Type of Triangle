@@ -1,0 +1,50 @@
+PROBLEM    NUMBER                                                                        :-                                                    3024. Type of Triangle
+
+
+// Date : 19 May 2025
+
+
+// Sorting
+
+class Solution {
+public:
+    string triangleType(vector<int>& nums) {
+        set<int>s(nums.begin(),nums.end());
+        sort(nums.begin(),nums.end());
+        if((nums[0] + nums[1])<=nums[2]) return "none";
+        if(s.size() == 1) return "equilateral";
+        if(s.size() == 2) return "isosceles";
+        return "scalene";
+    }
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// HashSet + △ Inequality 
+
+class Solution 
+{
+public:
+    string triangleType(vector<int>& nums) 
+    {
+        int a = nums[0];
+        int b = nums[1];
+        int c = nums[2];
+
+        // Step 1: Check triangle inequality
+        if ((a + b <= c) || (a + c <= b) || (b + c <= a)) 
+        {
+            return "none";
+        }
+
+        // Step 2: Count unique side lengths
+        unordered_set<int> sides;
+        sides.insert(a);
+        sides.insert(b);
+        sides.insert(c);
+
+        // Step 3: Determine triangle type
+        return sides.size() == 1 ? "equilateral" : (sides.size() == 2 ? "isosceles" : "scalene");
+    }
+};
