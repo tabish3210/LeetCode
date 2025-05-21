@@ -1,0 +1,70 @@
+PROBLEM  NUMBER                                               :-                                                                73. Set Matrix Zeroes
+
+
+
+//  Constant Space || Matrix
+
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        bool zeroinFirstCol = false;
+        for (int row = 0; row < matrix.size(); row++) {
+            if (matrix[row][0] == 0) zeroinFirstCol = true;
+            for (int col = 1; col < matrix[0].size(); col++) {
+                if (matrix[row][col] == 0) {
+                    matrix[row][0] = 0;
+                    matrix[0][col] = 0;
+                }
+            }
+        }
+
+        for (int row = matrix.size() - 1; row >= 0; row--) {
+            for (int col = matrix[0].size() - 1; col >= 1; col--) {
+                if (matrix[row][0] == 0 || matrix[0][col] == 0) {
+                    matrix[row][col] = 0;
+                }
+            }
+            if (zeroinFirstCol) {
+                matrix[row][0] = 0;
+            }
+        }
+    }
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////                   OR             ///////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+// Hash Table  ||  Matrix
+
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+        int m = matrix[0].size();
+        vector<int>row(n),col(m);
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(matrix[i][j] == 0){
+                    row[i] = 1;
+                    col[j] = 1;
+                }
+            }
+        }
+        for(int i=0;i<n;i++){
+            if(row[i] == 1){
+                for(int j=0;j<m;j++){
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+        for(int i=0;i<m;i++){
+            if(col[i] == 1){
+                for(int j=0;j<n;j++){
+                    matrix[j][i] = 0;
+                }
+            }
+        }
+    }
+};
