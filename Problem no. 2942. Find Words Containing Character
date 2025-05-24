@@ -1,0 +1,48 @@
+PROBLEM  NUMBER                                                                               :-                                                                                            2942. Find Words Containing Character
+
+
+
+// Date : 24 May 2025
+
+
+//  USING COUNT  || Since we only need to look for the presence of a singular character, we can use count to check for its frequency in the word.
+
+class Solution {
+public:
+    vector<int> findWordsContaining(vector<string>& words, char x) {
+        vector <int> res;
+        for (int i = 0 ; i < words.size() ; i++) {
+            if (count(words[i].begin(), words[i].end(), x)) res.push_back(i);
+        }
+        return res;
+    }
+};
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// Brute Force with string match
+
+class Solution 
+{
+public:
+    vector<int> findWordsContaining(vector<string>& words, char x) 
+    {
+        // Step 1: Create result vector
+        vector<int> result;
+
+        // Step 2: Loop through each word
+        for (int i = 0; i < words.size(); i++) 
+        {
+            // Step 3: Check if current word contains character x
+            if (words[i].find(x) != string::npos) 
+            {
+                // Step 4: Add index to result
+                result.push_back(i);
+            }
+        }
+
+        // Step 5: Return result
+        return result;
+    }
+};
