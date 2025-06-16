@@ -1,0 +1,79 @@
+PROBLEM   NUMBER                                                                                           :-                                               2016. Maximum Difference Between Increasing Elements
+
+// Date : 16 June 2025
+
+
+// Brute Force
+
+class Solution {
+public:
+    int maximumDifference(vector<int>& nums) {
+        int diff = -1;
+        int n = nums.size();
+        
+        for(int i=0;i<n;i++){
+            for(int j=i+1;j<n;j++){
+                if(nums[j] > nums[i]){
+                    diff = max(diff, nums[j] - nums[i]);
+                }
+            }
+        }
+
+        return diff;
+    }
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Min_Max Logic
+
+class Solution {
+public:
+    int maximumDifference(vector<int>& nums) {
+        int diff = -1;
+        int mn = nums[0];
+
+        for(int i=1;i<nums.size();i++){
+            if(nums[i] > mn){
+                // buy at every possible big day
+                diff = max({nums[i] - mn, diff});
+            }
+
+            // check if we can be able to buy on lesser amount day
+            if(nums[i] < mn){mn = nums[i];}
+        }
+
+        return diff;
+    }
+};
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//  Using Stack
+
+class Solution {
+public:
+    int maximumDifference(vector<int>& nums) {
+        stack<int> st;
+        int diff = -1;
+
+        for (int i = 0; i < nums.size(); i++) {
+            // Keep popping till stack top is greater than or equal to current
+            while (!st.empty() && st.top() >= nums[i]) {
+                st.pop();
+            }
+
+            if (!st.empty()) {
+                diff = max(diff, nums[i] - st.top());
+            }
+
+            st.push(nums[i]);
+        }
+
+        return diff;
+    }
+};
+
+
