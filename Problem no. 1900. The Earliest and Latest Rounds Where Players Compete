@@ -1,0 +1,154 @@
+PROBLEM   NUMBER                                                                  :                                                                              1900. The Earliest and Latest Rounds Where Players Compete
+
+// Date : 12 July 2025
+
+
+
+// Dynamic Programming Memoization
+
+class Solution {
+public:
+    vector<int> earliestAndLatest(int n, int firstPlayer, int secondPlayer) {
+        int left = min(firstPlayer, secondPlayer);
+        int right = max(firstPlayer, secondPlayer);
+
+        // If they are mirror positions — they meet in first round
+        if (left + right == n + 1) {
+            return {1, 1};
+        }
+
+        // For base cases
+        if (n == 3 || n == 4) {
+            return {2, 2};
+        }
+
+        // Mirror for symmetry if closer to right
+        if (left - 1 > n - right) {
+            int temp = n + 1 - left;
+            left = n + 1 - right;
+            right = temp;
+        }
+
+        int nextRound = (n + 1) / 2;
+        int minRound = n, maxRound = 1;
+
+        if (right * 2 <= n + 1) {
+            // Case 1: Players are both in the left half
+            int preLeft = left - 1;
+            int midGap = right - left - 1;
+
+            for (int i = 0; i <= preLeft; ++i) {
+                for (int j = 0; j <= midGap; ++j) {
+                    auto res = earliestAndLatest(nextRound, i + 1, i + j + 2);
+                    minRound = min(minRound, 1 + res[0]);
+                    maxRound = max(maxRound, 1 + res[1]);
+                }
+            }
+        } else {
+            // Case 2: Players are in opposite halves
+            int mirrored = n + 1 - right;
+            int preLeft = left - 1;
+            int midGap = mirrored - left - 1;
+            int innerGap = right - mirrored - 1;
+
+            for (int i = 0; i <= preLeft; ++i) {
+                for (int j = 0; j <= midGap; ++j) {
+                    int pos1 = i + 1;
+                    int pos2 = i + j + 1 + (innerGap + 1) / 2 + 1;
+                    auto res = earliestAndLatest(nextRound, pos1, pos2);
+                    minRound = min(minRound, 1 + res[0]);
+                    maxRound = max(maxRound, 1 + res[1]);
+                }
+            }
+        }
+
+        return {minRound, maxRound};
+    }
+};
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////   OR    ///////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+// Dynamic Programming Memoization
+
+class Solution 
+{
+public:
+    pair<int, int> dfs(int n, int p1, int p2) 
+    {
+        // Step 1: Base case — they meet
+        if (p1 + p2 == n + 1) 
+        {
+            return {1, 1};
+        }
+
+        // Step 2: Normalize
+        if (p1 > p2) 
+        {
+            swap(p1, p2);
+        }
+        
+        if (n <= 4) 
+        {
+            return {2, 2};
+        }
+
+        int m = (n + 1) / 2;
+        int minR = INT_MAX;
+        int maxR = INT_MIN;
+
+        // Step 3: Use symmetry to reduce state space
+        if (p1 - 1 > n - p2) 
+        {
+            int t = n + 1 - p1;
+            p1 = n + 1 - p2;
+            p2 = t;
+        }
+
+        // Step 4: Simulate all scenarios
+        if (p2 * 2 <= n + 1) 
+        {
+            int a = p1 - 1;
+            int b = p2 - p1 - 1;
+
+            for (int i = 0; i <= a; ++i) 
+            {
+                for (int j = 0; j <= b; ++j) 
+                {
+                    auto [r1, r2] = dfs(m, i + 1, i + j + 2);
+                    minR = min(minR, r1 + 1);
+                    maxR = max(maxR, r2 + 1);
+                }
+            }
+        } 
+        else 
+        {
+            int p4 = n + 1 - p2;
+            int a = p1 - 1;
+            int b = p4 - p1 - 1;
+            int c = p2 - p4 - 1;
+
+            for (int i = 0; i <= a; ++i) 
+            {
+                for (int j = 0; j <= b; ++j) 
+                {
+                    int offset = i + j + 1 + (c + 1) / 2 + 1;
+                    auto [r1, r2] = dfs(m, i + 1, offset);
+                    minR = min(minR, r1 + 1);
+                    maxR = max(maxR, r2 + 1);
+                }
+            }
+        }
+
+        // Step 5: Return earliest and latest round
+        return {minR, maxR};
+    }
+
+    vector<int> earliestAndLatest(int n, int firstPlayer, int secondPlayer) 
+    {
+        auto [earliest, latest] = dfs(n, firstPlayer, secondPlayer);
+        return {earliest, latest};
+    }
+};
