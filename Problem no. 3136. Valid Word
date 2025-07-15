@@ -1,0 +1,57 @@
+PROBLEM  NUMBER                                                                     :                                             3136. Valid Word
+
+// Date : 15 July 2025
+
+
+// String 
+
+
+class Solution {
+public:
+    bool isValid(string s) {
+        int n = s.length();
+        if (n < 3) return false;
+
+        int vowels = 0, consonants = 0;
+        string vowelList = "aeiouAEIOU";
+
+        for (char c : s) {
+            if (isalpha(c)) {
+                if (vowelList.find(c) != string::npos) {
+                    vowels++;
+                } else {
+                    consonants++;
+                }
+            } else if (!isdigit(c)) {
+                return false; // invalid character
+            }
+        }
+
+        return vowels >= 1 && consonants >= 1;
+    }
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// bitset version
+
+
+class Solution {
+public:
+    bool isValid(string& word) {
+        const int n=word.size();
+        if (n<3) return 0;
+        bitset<2> v=0;
+        constexpr unsigned vowels=1|(1<<('e'-'a'))|(1<<('o'-'a'))|(1<<('i'-'a'))|(1<<('u'-'a'));
+        for(char c: word){
+            if (!isalpha(c) && !isdigit(c)) return 0;
+            if (isalpha(c)){
+                unsigned i=(c>'Z')?c-'a':c-'A';
+                v[(vowels>>i)&1]=1;
+            }
+        }
+        return v==3;
+    }
+};
