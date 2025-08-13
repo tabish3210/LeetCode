@@ -1,0 +1,19 @@
+PROBLEM  NUMBER                                                 :                                                           326. Power of Three
+
+
+// Date : 13 Aug 2025
+
+
+// Math |  Number Theory
+// Let N be the largest power of p=3 <2^31.  Then test if N%n==0. This method works because p=3 is prime; same method can be applied for any prime power.
+
+class Solution {
+public:
+    bool isPowerOfThree(int n) {
+        if (n <= 0) return false;
+        while (n % 3 == 0) {
+            n /= 3;
+        }
+        return n == 1;
+    }
+};
