@@ -1,0 +1,25 @@
+PROBLEM   NUMBER                                                                                :                                       2264. Largest 3-Same-Digit Number in String
+
+// Thursday 14 August 2025
+
+
+//  Sliding Window + Substring
+
+
+class Solution {
+public:
+    string largestGoodInteger(string num) {
+        if (num.size() < 3) return "";
+
+        string result = "";
+        for (int i = 0; i <= num.size() - 3; i++) {
+            if (num[i] == num[i+1] && num[i+1] == num[i+2]) {
+                string triple = num.substr(i, 3);
+                if (result.empty() || triple > result) {
+                    result = triple; 
+                }
+            }
+        }
+        return result;
+    }
+};
