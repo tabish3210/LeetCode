@@ -1,0 +1,32 @@
+PROBLEM   NUMBER                                                                                  :                                                 1323. Maximum 69 Number
+
+
+// Saturday, 16 August 2025
+
+
+// single loop only
+
+
+#include <cmath> // Required for pow()
+
+class Solution {
+public:
+    int maximum69Number(int num) {
+        int a = -1; // Position of the rightmost '6' (from right to left)
+
+        // Loop through the digits of num to find the lowest (rightmost) position of a 6
+        for (int n = num, d = 0; n > 0; n /= 10, d++) {
+            int r = n % 10; // Current digit
+            if (r == 6) {
+                a = d; // Store position of 6 (rightmost one encountered)
+            }
+        }
+
+        // If no '6' found, return num unchanged
+        if (a == -1) return num;
+
+        // Replace the rightmost 6 with 9 by adding 3 * 10^a to num
+        return num + 3 * pow(10, a);
+    }
+};
+
