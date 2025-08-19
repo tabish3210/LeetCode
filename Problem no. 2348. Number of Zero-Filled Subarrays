@@ -1,0 +1,31 @@
+PRONLEM    NUMBER                                                       :                                                              2348. Number of Zero-Filled Subarrays
+
+
+// Tuesday, 19 August 2025
+
+// TWO Pointer | Math
+
+// To reduce the if-branch, 1 is appended to the array nums. Use the loop to find out the lengths N's of maximal subarrays filling with 0. Then use the formula N*(N+1)/2 to sum up.
+
+class Solution {
+public:
+    long long zeroFilledSubarray(vector<int>& nums) {
+        nums.push_back(1);
+        const int s=nums.size();
+        int a_len=0 , prev=1;
+        long long sum=0;
+        for (int i=0; i<s; i++){
+            if (nums[i]==0){
+                 a_len++;
+                 prev=0;
+            }     
+            else if (prev==0)
+            {
+                sum+=(long long)a_len*(a_len+1)/2;
+                a_len=0;
+                prev=nums[i];
+            }
+        }
+        return sum;
+    }
+};
