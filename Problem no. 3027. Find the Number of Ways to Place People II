@@ -1,0 +1,76 @@
+PROBLEM  NUMBER                                                                                     :                                                       3027. Find the Number of Ways to Place People II
+
+// Wednesday, 3 September 2025
+
+
+//  Sort+Double loop | Geometry
+
+class Solution {
+public:
+    static bool cmp(const vector<int>& p, const vector<int>& q){
+        return (p[0]==q[0])?p[1]<q[1]:p[0]>q[0];// order by (x, >)
+    }
+    static int numberOfPairs(vector<vector<int>>& P) {
+        sort(P.begin(), P.end(), cmp);
+        int n = P.size(), ans = 0;
+        for(int i=0; i<n-1; i++){
+            int y=INT_MAX, yi=P[i][1];
+            for(int j = i+1; j<n; j++){
+                const int yj=P[j][1];
+                if (yj>=yi && y>yj){//P[j] cannot be in between
+                    ans++;
+                    y=yj;
+                    if (yi==yj) break;
+                }
+            }
+        }
+        return ans;
+    }
+};
+
+auto init = []()
+{ 
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    return 'c';
+}();
+
+
+///////////////////////////////////////////////////////////////////////////////////  SIMPLE ///////////////////////////////////////////////////
+
+// Simpler 
+
+
+class Solution {
+public:
+    int numberOfPairs(std::vector<std::vector<int>>& points) {
+        // Sort the points in non-decreasing order of their x-values.
+        // In case of a tie, sort by the y-values in decreasing order.
+        std::sort(points.begin(), points.end(), [](const std::vector<int>& a, const std::vector<int>& b) {
+            return a[0] < b[0] || (a[0] == b[0] && b[1] < a[1]);
+        });
+
+        int n = points.size(); // The total number of points
+        int ans = 0; // Initialize the count of pairs
+
+        for (int i = 0; i < n; ++i) {
+            int y1 = points[i][1]; // Get the y-value of the current point
+            int maxY = INT_MIN; // Initialize maxY with the smallest possible integer
+
+            // Iterate through all points that come after the current point
+            for (int j = i + 1; j < n; ++j) {
+                int y2 = points[j][1]; // Get the y-value of the next point
+                // If maxY is less than y2, and y2 is less than or equal to y1,
+                // it means we found a pair where the second point can potentially
+                // form a pair with the first, based on the y-values.
+                if (maxY < y2 && y2 <= y1) {
+                    maxY = y2; // Update maxY to the new found y-value
+                    ++ans; // Increment the count of pairs
+                }
+            }
+        }
+      
+        return ans; // Return the total number of pairs found
+    }
+};
