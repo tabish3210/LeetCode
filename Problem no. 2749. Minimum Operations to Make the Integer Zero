@@ -1,0 +1,53 @@
+PROBLEM  NUMBER                                                                              :                                                        2749. Minimum Operations to Make the Integer Zero
+
+// Friday, 5 September 2025
+
+
+// Bit Manipulation | Count bits
+
+class Solution {
+public:
+    int makeTheIntegerZero(int num1, int num2) {
+        if (num2==0) return popcount(unsigned(num1));
+        long long x=num1;
+        for(int k=1; k<61; k++){
+            x-=num2;
+            if (x<k) return -1;
+            if (x>=0 && k>=popcount((unsigned long long)(x))) return k;
+        }
+        return -1;
+    }
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+class Solution {
+public:
+    int makeTheIntegerZero(int num1, int num2) {
+
+        for(int operationCount = 1; operationCount <= 32; operationCount++){
+            // when doing operationCount operations equation becomes
+            // num1 - k * num2 = 2^x + 2 ^ y ... (operationCount powers of 2)
+
+            long long left = (1LL * num1) - (1LL * operationCount * num2);
+
+            // sum of powers of two will always be positive i.e right side will always be >= operationCount
+            // minimum value == operationCount on taking all powers as 0.
+            
+            if(left < operationCount) return -1;
+
+            // now to form left we are using powers of 2
+            // each power of 2 can be seen as setting a bit in left
+            // assuming b bits are set in left, we need atleast b powers of 2.
+            // more can be adjusted as smaller powers can add up to make bigger powers
+
+            int b = __builtin_popcountll(left);
+
+            // we have the required b bits to form left so left - right = 0;
+            if(operationCount >= b) return operationCount;
+        }
+
+        return -1;
+    }
+};
