@@ -1,0 +1,43 @@
+PROBLEM  NUMBER                                                             :                                              1304. Find N Unique Integers Sum up to Zero
+
+// Sunday, 7 September 2025
+
+
+//  Math |  Greedy
+
+class Solution {
+public:
+    vector<int> sumZero(int n) {
+        vector<int> res(n);
+        res[0] = n * (1 - n) / 2;
+        for (int i = 1; i < n; ++i)
+            res[i] = i;
+        return res;
+    }
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////  O-R  ////////////////////////////////////////////////////////////
+
+ // Approch 2 
+/*
+We can use the triangular number formula:
+
+ Tn = (N+1)/2
+ ​
+Finally,  constructed sequence:  
+[ n(1−n)/2 ,1,2,3,…n−1]
+​
+*/
+
+
+class Solution {
+public:
+    vector<int> sumZero(int n) {
+        vector<int> A(n);
+        for (int i = 0; i < n; ++i)
+            A[i] = i * 2 - n + 1;
+        return A;
+    }
+};
+
