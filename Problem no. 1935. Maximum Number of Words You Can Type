@@ -1,0 +1,39 @@
+PROBLEM   NUMBER                                                                                         :                                 1935. Maximum Number of Words You Can Type
+
+
+// Monday, 15 September 2025
+
+
+
+// STRING  | unorder set
+
+#include <iostream>
+#include <sstream>
+#include <unordered_set>
+using namespace std;
+
+class Solution {
+public:
+    int canBeTypedWords(string text, string brokenLetters) {
+        // Step 1: Store broken letters in a hash set for O(1) lookup
+        unordered_set<char> broken(brokenLetters.begin(), brokenLetters.end());
+
+        int count = 0;
+        istringstream iss(text);  // Step 2: Split text into words
+        string word;
+
+        // Step 3: Process each word
+        while (iss >> word) {
+            bool canType = true;
+            for (char ch : word) {
+                if (broken.count(ch)) {  // O(1) check for broken letter
+                    canType = false;
+                    break;
+                }
+            }
+            if (canType) count++;  // Step 4: Count if word is typeable
+        }
+
+        return count;
+    }
+};
