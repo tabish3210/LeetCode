@@ -1,0 +1,67 @@
+PROBLEM  NUMBER                                                                                   :                                                         3508. Implement Router
+
+// Saturday, 20 September 2025
+
+
+
+//  Hashmap + Queue
+
+class Router {
+public:
+    int max_size;
+    set<tuple<int,int,int>> st;
+    queue<tuple<int,int,int>> q;
+    unordered_map<int,vector<int>> mp;
+    unordered_map<int,int> start_idx;
+
+    Router(int memoryLimit) {
+        max_size = memoryLimit;
+        // st.clear();
+        // mp.clear();
+        // start_idx.clear();
+        // while(q.size()) q.pop();
+    }
+
+    bool addPacket(int source, int destination, int timestamp) {
+        if(st.count({timestamp,destination,source})) return false;
+
+        if(q.size() == max_size) {
+            auto [t,d,s] = q.front();
+            q.pop();
+            st.erase({t,d,s});
+            start_idx[d]++;
+        }
+        st.insert({timestamp,destination,source});
+        q.push({timestamp,destination,source});
+        mp[destination].push_back(timestamp);
+        return true;
+    }
+
+    vector<int> forwardPacket() {
+        if(q.empty()) return {};
+        auto [t,d,s] = q.front();
+        q.pop();
+        st.erase({t,d,s});
+        start_idx[d]++;
+        vector<int> ans = {s,d,t};
+        return ans;
+    }
+
+    int getCount(int destination, int startTime, int endTime) {
+        auto &v = mp[destination];
+        int si = start_idx[destination];
+        int lb = lower_bound(v.begin()+si, v.end(), startTime) - v.begin();
+        int ub = upper_bound(v.begin()+si, v.end(), endTime) - v.begin();
+        ub--;
+        return ub-lb+1;
+    }
+
+};
+
+/**
+ * Your Router object will be instantiated and called as such:
+ * Router* obj = new Router(memoryLimit);
+ * bool param_1 = obj->addPacket(source,destination,timestamp);
+ * vector<int> param_2 = obj->forwardPacket();
+ * int param_3 = obj->getCount(destination,startTime,endTime);
+ */
