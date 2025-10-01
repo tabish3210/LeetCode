@@ -1,0 +1,22 @@
+PROBLEM   NUMBER                                                      :                                                1518. Water Bottles
+
+// Wednesday, 1 October 2025
+
+
+// Math | Simulation
+
+class Solution {
+public:
+    int numWaterBottles(int b, int n) {
+        return b + (b - 1) / (n - 1);
+    }
+};
+
+//////////////////////////////////////////////  OR 
+
+class Solution {
+public:
+    int numWaterBottles(int numBottles, int numExchange) {
+        return numBottles + (numBottles - 1) / (numExchange - 1);
+    }
+};
