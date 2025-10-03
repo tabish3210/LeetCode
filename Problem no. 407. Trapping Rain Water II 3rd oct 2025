@@ -1,0 +1,70 @@
+PROBLEM   NUMBER                                                 :                                                   407. Trapping Rain Water II
+
+//  Friday, 3 October 2025
+
+
+// Priority Queue(min heap)  +  BFS
+
+class Solution {
+public:
+    int trapRainWater(vector<vector<int>>& heightMap) {
+
+        // Min-heap (priority queue) to process the cell with the lowest height first.
+        priority_queue<vector<int>, vector<vector<int>>, greater<>> q;
+
+        int n = heightMap.size();        // Number of rows
+        int m = heightMap[0].size();     // Number of columns
+
+        // Visited matrix to track which cells have already been processed
+        vector<vector<int>> vis(n, vector<int>(m, 0));
+
+        // Add all the boundary cells to the min-heap and mark them as visited
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                // Check if the cell is on the boundary
+                if (i == 0 || i == n - 1 || j == 0 || j == m - 1) {
+                    q.push({heightMap[i][j], i, j});  // Push height, x, y
+                    vis[i][j] = 1;                    // Mark as visited
+                }
+            }
+        }
+
+        // Direction arrays for 4 neighbors: down, up, right, left
+        int dx[] = {1, -1, 0, 0};
+        int dy[] = {0, 0, 1, -1};
+
+        int ans = 0; // To store total trapped water
+
+        // Start BFS-like traversal using the priority queue
+        while (!q.empty()) {
+            // Get the cell with the lowest height
+            int h = q.top()[0];
+            int x = q.top()[1];
+            int y = q.top()[2];
+            q.pop();
+
+            // Explore all 4 neighboring cells
+            for (int k = 0; k < 4; k++) {
+                int nx = dx[k] + x;
+                int ny = dy[k] + y;
+
+                // Check if neighbor is within bounds and not visited
+                if (nx >= 0 && nx < n && ny >= 0 && ny < m && !vis[nx][ny]) {
+                    // If the neighbor's height is lower than current boundary,
+                    // then water can be trapped. Add the difference to the answer.
+                    ans += max(h - heightMap[nx][ny], 0);
+
+                    // Push the neighbor into the heap. Its effective height becomes the max of
+                    // its own height and the current boundary height to prevent overflow of water.
+                    q.push({max(h, heightMap[nx][ny]), nx, ny});
+
+                    // Mark neighbor as visited
+                    vis[nx][ny] = 1;
+                }
+            }
+        }
+
+        // Return the total water trapped
+        return ans;
+    }
+};
