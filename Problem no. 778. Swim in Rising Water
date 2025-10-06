@@ -1,0 +1,99 @@
+PROBLEM  NUMBER                                               :                                        778. Swim in Rising Water
+
+
+// Monday, 6 October 2025
+
+
+// Kruskal 
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class DisjointSet {
+public:
+    vector<int> rnk, parent, sz;
+
+    // Build DSU for nodes 0..n (inclusive). We'll pass n = V-1 so arrays size = V.
+    DisjointSet(int n) {
+        rnk.resize(n + 1, 0);
+        parent.resize(n + 1);
+        sz.resize(n + 1, 1);
+        for (int i = 0; i <= n; i++) parent[i] = i;
+    }
+
+    int findUPar(int x) {
+        if (parent[x] == x) return x;
+        return parent[x] = findUPar(parent[x]); // path compression
+    }
+
+    void unionByRank(int a, int b) {
+        a = findUPar(a);
+        b = findUPar(b);
+        if (a == b) return;
+        if (rnk[a] < rnk[b]) parent[a] = b;
+        else if (rnk[b] < rnk[a]) parent[b] = a;
+        else { parent[b] = a; rnk[a]++; }
+    }
+
+    void unionBySize(int a, int b) {
+        a = findUPar(a);
+        b = findUPar(b);
+        if (a == b) return;
+        if (sz[a] < sz[b]) {
+            parent[a] = b;
+            sz[b] += sz[a];
+        } else {
+            parent[b] = a;
+            sz[a] += sz[b];
+        }
+    }
+};
+
+class Solution {
+public:
+    int swimInWater(vector<vector<int>>& grid) {
+        int n = (int)grid.size();
+        int V = n * n;                  // number of nodes
+        DisjointSet ds(V - 1);          // indexes go 0..V-1; construct DSU with N=V-1
+
+        vector<tuple<int,int,int>> edges; // (weight, u, v)
+        edges.reserve(2 * n * (n - 1));   // approximate number of unique edges
+
+        // Helper to convert (r,c) -> single id
+        auto id = [&](int r, int c) { return r * n + c; };
+
+        // Build edges: only RIGHT and DOWN to avoid duplicates (undirected grid)
+        for (int r = 0; r < n; r++) {
+            for (int c = 0; c < n; c++) {
+                if (c + 1 < n) { // right neighbor
+                    int u = id(r, c), v = id(r, c + 1);
+                    int w = max(grid[r][c], grid[r][c + 1]);
+                    edges.emplace_back(w, u, v);
+                }
+                if (r + 1 < n) { // down neighbor
+                    int u = id(r, c), v = id(r + 1, c);
+                    int w = max(grid[r][c], grid[r + 1][c]);
+                    edges.emplace_back(w, u, v);
+                }
+            }
+        }
+
+        // Sort edges by their weight (earliest time you can traverse that connection)
+        sort(edges.begin(), edges.end());
+
+        // Kruskal: unite edges until start and end become connected
+        int start = 0, target = V - 1;
+        for (auto& e : edges) {
+            int w, u, v;
+            tie(w, u, v) = e;
+            ds.unionBySize(u, v);
+            if (ds.findUPar(start) == ds.findUPar(target)) {
+                return w; // earliest time when a full path exists
+            }
+        }
+
+        // Problem guarantees connectivity; this line is just a fallback.
+        return 0;
+    }
+};
