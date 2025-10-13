@@ -1,0 +1,53 @@
+PROBLEM   NUMBER                                               :                                  2273. Find Resultant Array After Removing Anagrams
+
+
+// Monday, 13 October 2025
+
+
+// Sorting | Hash Table
+
+class Solution {
+public:
+    vector<string> removeAnagrams(vector<string>& words) {
+        vector<string> ans;
+        ans.push_back(words[0]);
+        
+        for (int i = 1; i < words.size(); i++) {
+            string a = words[i], b = ans.back();
+            sort(a.begin(), a.end()), sort(b.begin(), b.end());
+            if (a != b) ans.push_back(words[i]); 
+        }
+        return ans;
+    }
+};
+
+/////////////////////////////////////////////////////////////////////  Or   ///////////////////////////////////////////////
+
+
+//  Easy approach 
+
+
+class Solution {
+public:
+    vector<string> removeAnagrams(vector<string>& words) {
+        vector<string> res;
+        res.push_back(words[0]);
+        
+        for (int i = 1; i < words.size(); i++) {
+            vector<int> freq1(26, 0), freq2(26, 0);
+            
+            for (char ch : res.back()) {
+                freq1[ch - 'a']++;
+            }
+            for (char ch : words[i]) {
+                freq2[ch - 'a']++;
+            }
+            
+            if (freq1 != freq2) {
+                res.push_back(words[i]);
+            }
+        }
+        
+        return res;
+    }
+};
