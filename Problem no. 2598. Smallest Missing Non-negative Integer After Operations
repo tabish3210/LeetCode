@@ -1,0 +1,23 @@
+PROBLEM  NUMBER                                 :                                      2598. Smallest Missing Non-negative Integer After Operations
+
+
+// Thursday, 16 October 2025
+
+
+// gready | math
+
+
+class Solution {
+public:
+	int findSmallestInteger(vector<int>& nums, int v) {
+		long long n = nums.size(), x, res = 0;
+		vector<int> rem(v, 0);
+		for (int i = 0; i < n; i++) {
+			x = ((nums[i] % v) + v) % v;
+			rem[x]++;
+		}
+
+		while (rem[res % v]--) res++;
+		return res;
+	}
+};
