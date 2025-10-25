@@ -1,0 +1,38 @@
+PROBLEM    NUMBER                                                :                                                 1716. Calculate Money in Leetcode Bank
+
+// Saturday, 25 October 2025
+
+
+// Arithmetic sequence (AP) | MATH
+
+class Solution {
+public:
+    int totalMoney(int n) {
+        int w = n / 7; // weeks
+        int d = n % 7; // days
+        
+        return (w * (49 + 7 * w) + d * (2 * w + d + 1)) / 2;}
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////  OR
+
+
+
+
+//  MATH
+
+class Solution {
+public:
+    int ts(int n) { 
+        return (n * (n + 1)) >> 1;
+    }
+
+    int totalMoney(int days) {
+        int nWeeks = days / 7;
+        int rDays = days % 7;        
+        int total = ts(days);
+        if (days <= 7) return total;
+        
+        return total - 42 * ts(nWeeks - 1) - 6 * nWeeks * rDays;
+    }
+};
