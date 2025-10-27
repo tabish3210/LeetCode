@@ -1,0 +1,33 @@
+PROBLEM    NUMBER                                     :                                    2125. Number of Laser Beams in a Bank
+
+// Monday, 27 October 2025
+
+
+//  Math | Combinatorics | Counting
+
+class Solution {
+public:
+    // Helper function to count '1's in a string
+    int solve(string str) {
+        int count = 0;
+        for (char ch : str) {
+            if (ch == '1') count++;
+        }
+        return count;
+    }
+
+    int numberOfBeams(vector<string>& bank) {
+        int prev = 0;  // Number of devices in previous non-empty row
+        int curr = 0;  // Number of devices in current row
+        int n = bank.size();
+        int ans = 0;   // Total number of beams
+
+        for (int i = 0; i < n; i++) {
+            curr = solve(bank[i]);
+            ans += (curr * prev);
+            if (curr) prev = curr;
+        }
+
+        return ans;
+    }
+};
