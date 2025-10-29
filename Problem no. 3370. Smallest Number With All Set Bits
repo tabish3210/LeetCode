@@ -1,0 +1,26 @@
+PROBLEM   NUMBER                                            :                                             3370. Smallest Number With All Set Bits
+
+//  Wednesday, 29 October 2025
+
+
+// Bit Manipulation
+
+/*
+ | Concept            | Description                                         |
+| ------------------ | --------------------------------------------------- |
+| **Goal**           | Find smallest number ≥ `n` that has all bits = 1    |
+| **Formula**        | `x = 2^k - 1`                                       |
+| **Loop logic**     | Keep doubling `x` and adding 1 until it exceeds `n` |
+| **Binary pattern** | 1 → 11 → 111 → 1111 → ...                           |
+
+*/
+class Solution {
+public:
+    int smallestNumber(int n) {
+        int x = 1;
+        while (x < n) {
+            x = x * 2 + 1;
+        }
+        return x;
+    }
+};
