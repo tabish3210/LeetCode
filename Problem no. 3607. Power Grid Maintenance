@@ -1,0 +1,113 @@
+PROBLEM    NUMBER                                     :                                       3607. Power Grid Maintenance
+
+
+
+// Thursday, 6 November 2025
+
+
+//   Depth-First Search | Union Find  DSU 
+
+class DSU 
+{
+public:
+    vector<int> parent;
+    DSU(int n) 
+    {
+        // Step 1: Initialize DSU
+        parent.resize(n + 1);
+        for (int i = 1; i <= n; i++)
+        {
+            parent[i] = i;
+        }
+    }
+
+    int find(int x) 
+    {
+        if (parent[x] != x)
+        {
+            parent[x] = find(parent[x]);
+        }
+
+        return parent[x];
+    }
+
+    void unionSet(int x, int y) 
+    {
+        int px = find(x);
+        int py = find(y);
+        // Step 2: Union operation to merge components
+        if (px != py)
+        {
+            parent[py] = px;
+        }
+    }
+};
+
+class Solution 
+{
+public:
+    vector<int> processQueries(int c, vector<vector<int>>& connections, vector<vector<int>>& queries) 
+    {
+        // Step 1: Initialize DSU for all computers
+        DSU dsu(c);
+
+        // Step 2: Merge connected nodes
+        for (auto& conn : connections)
+        {
+            dsu.unionSet(conn[0], conn[1]);
+        }
+
+        // Step 3: Build map of root → ordered set
+        unordered_map<int, set<int>> mp;
+        for (int i = 1; i <= c; i++) 
+        {
+            int root = dsu.find(i);
+            mp[root].insert(i);
+        }
+
+        // Step 4: Prepare offline tracker and result
+        vector<bool> isOffline(c + 1, false);
+        vector<int> res;
+
+        // Step 5: Process each query
+        for (auto& q : queries) 
+        {
+            int type = q[0];
+            int node = q[1];
+
+            if (type == 1) 
+            {
+                // Step 6: Handle type-1 (find smallest online)
+                if (!isOffline[node]) 
+                {
+                    res.push_back(node);
+                } 
+                else 
+                {
+                    int root = dsu.find(node);
+                    if (!mp[root].empty())
+                    {
+                        res.push_back(*mp[root].begin());
+                    }
+                    else
+                    {
+                        res.push_back(-1);
+                    }
+                }
+            } 
+            else 
+            {
+                // Step 7: Handle type-2 (mark offline)
+                if (!isOffline[node]) 
+                {
+                    isOffline[node] = true;
+                    int root = dsu.find(node);
+                    mp[root].erase(node);
+                }
+            }
+        }
+
+        // Step 8: Return result vector
+        return res;
+    }
+};
