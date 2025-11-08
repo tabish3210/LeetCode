@@ -1,0 +1,32 @@
+PROBLEM   NUMBER                                    :                               1611. Minimum One Bit Operations to Make Integers Zero
+
+
+//   Saturday, 8 November 2025
+
+
+//  Bit Manipulation + Gray Code Logic 
+
+class Solution {
+public:
+    int minimumOneBitOperations(int n) {
+        int res = 0;
+        while (n) {
+            res ^= n;
+            n >>= 1;
+        }
+        return res;
+    }
+};
+
+////////////////////////////////////////////////
+
+class Solution {
+public:
+   int minimumOneBitOperations(int n) {
+    if (n <= 1)
+        return n;
+    int bit = 0;
+    while ((1 << bit) <= n)
+        bit++;
+    return ((1 << bit) - 1) - minimumOneBitOperations(n - (1 << (bit-1)));}
+};
