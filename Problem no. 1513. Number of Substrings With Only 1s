@@ -1,0 +1,22 @@
+PROBLEM   NUMBER                                        :                               1513. Number of Substrings With Only 1s
+
+// Sunday, 16 November 2025
+
+
+//  Greedy  |  Math
+
+class Solution {
+public:
+    int numSub(string s) {
+        int cnt = 0, total = 0, mod = 1e9 + 7;
+        for (char a : s) {
+            if (a == '1') {
+                cnt++;
+            } else {
+                cnt = 0;
+            }
+            total = (total + cnt) % mod;
+        }
+        return total;
+    }
+};
