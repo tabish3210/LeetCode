@@ -1,0 +1,53 @@
+PROBLEM    NUMBER                       :                                          1437. Check If All 1's Are at Least Length K Places Away
+
+// // Monday, 17 November 2025
+
+
+
+// Track previous index of 1, verify distance for every new 1
+
+class Solution {
+public:
+    bool kLengthApart(vector<int>& nums, int k) {
+
+        int n = nums.size();
+        int pre_index;
+        bool f = true;
+
+        for (int i = 0; i < n; i++) {
+            if (f && nums[i] == 1) {
+                f = false;
+                pre_index = i;
+                continue;
+            }
+            if (nums[i] == 1) {
+                if (i - pre_index - 1 >= k)
+                    pre_index = i;
+                else
+                    return false;
+            }
+        }
+
+        return true;
+    }
+};
+
+
+/////////////////////////////////////////////////////////////////////////////
+
+
+// Check i-last-1<k if s[i]==1
+class Solution {
+public:
+    bool kLengthApart(vector<int>& nums, int k) {
+        int n=nums.size(), last=-1e9;
+ for(int i=0; i<n; i++){// trasverse all nums[i]
+    if (nums[i]==1){ 
+        if (i-last-1<k) 
+            return 0;// distance+1 is<k, an early stop returning false
+        last=i;// update last with i
+    }
+}
+        return 1;
+    }
+};
