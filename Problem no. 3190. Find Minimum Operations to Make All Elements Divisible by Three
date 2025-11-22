@@ -1,0 +1,19 @@
+PROBLEM   NUMBER                                             :                                   3190. Find Minimum Operations to Make All Elements Divisible by Three
+
+
+// Saturday, 22 November 2025
+
+
+
+// Linear 
+
+class Solution {
+public:
+    int minimumOperations(vector<int>& nums) {
+        int ans = 0;
+        for(int num : nums) {
+            if(num % 3 != 0) ans++;
+        }
+        return ans;
+    }
+};
