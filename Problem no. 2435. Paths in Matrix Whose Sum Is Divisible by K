@@ -1,0 +1,35 @@
+PROBLEM NUMBER          :                     2435. Paths in Matrix Whose Sum Is Divisible by K
+
+
+// Wednesday, 26 November 2025
+
+
+// Dp
+
+class Solution {
+public:
+    const int MOD = 1e9 + 7;
+    
+    int helper(vector<vector<int>>& grid, int k, int i, int j, int sum, vector<vector<vector<int>>>& dp) {
+        if (i < 0 || j < 0) return 0;
+        sum %= k; // store only remainder
+
+        if (i == 0 && j == 0) 
+            return ((sum + grid[0][0]) % k == 0 ? 1 : 0);
+
+        if (dp[i][j][sum] != -1) return dp[i][j][sum];
+
+        int newSum = (sum + grid[i][j]) % k;
+        int up = helper(grid, k, i - 1, j, newSum, dp);
+        int left = helper(grid, k, i, j - 1, newSum, dp);
+
+        return dp[i][j][sum] = (up + left) % MOD;
+    }
+    int numberOfPaths(vector<vector<int>>& grid, int k) {
+         int m = grid.size();
+        int n = grid[0].size();
+        // Initialize 3D DP with -1
+        vector<vector<vector<int>>> dp(m, vector<vector<int>>(n, vector<int>(k, -1)));
+        return helper(grid, k, m - 1, n - 1, 0, dp);
+    }
+};
