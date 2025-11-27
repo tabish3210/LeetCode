@@ -1,0 +1,31 @@
+PROBLEM   NUMBER                        :                      3381. Maximum Subarray Sum With Length Divisible by K
+// Thursday, 27 November 2025
+
+
+//  min prefix sum for i%k | Dp
+
+class Solution {
+public:
+    long long maxSubarraySum(vector<int>& nums, int k) {
+        int n = nums.size();
+        long long sum = 0;
+
+        long long res = LONG_MIN;
+        int l=0;
+
+        vector<long long> dp(n,0);
+
+
+        for(int r=0 ; r < n ; r++){
+            sum += nums[r];
+            if(r-l+1==k){
+                dp[r] = sum+(r-k>=0?max(0LL,dp[r-k]):0);
+                res = max(res,dp[r]);
+                sum -= nums[l];
+                l++;
+            }
+        }
+
+        return res;
+    }
+};
