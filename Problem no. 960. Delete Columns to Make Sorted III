@@ -1,0 +1,75 @@
+PROBLEM    NUMBER              :                   960. Delete Columns to Make Sorted III
+
+//  Monday, 22 December 2025
+
+
+// DP
+
+#include <vector>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    int minDeletionSize(vector<string>& strs) {
+        int n = (int)strs[0].size();
+        int m = (int)strs.size();
+        vector<int> dp(n, 1);
+
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                bool ok = true;
+                for (int r = 0; r < m; r++) {
+                    if (strs[r][j] > strs[r][i]) { ok = false; break; }
+                }
+                if (ok) dp[i] = max(dp[i], dp[j] + 1);
+            }
+        }
+
+        int mx = 0;
+        for (int v : dp) mx = max(mx, v);
+        return n - mx;
+    }
+};
+
+/////////////////////////////////////////////////////////////////////// OR  /////////////////////////
+
+
+// Iterative DP with Reduce Space
+
+class Solution {
+public:
+    static int minDeletionSize(vector<string>& strs) {
+        const int n=strs.size(), m=strs[0].size();
+
+        // dp[col][last]
+        int dp[2][101]={0};
+
+        // Base case: col=0
+        for (int last=1; last<=m; last++) {
+            bool ok=(last==m)|| all_of(strs.begin(),strs.end(),
+                [&](const string& s) {return s[0]<=s[last];}
+            );
+            dp[0][last]=ok;
+        }
+
+        // Fill DP
+        for (int col=1; col<m; col++) {
+            const bool b=col&1;
+            for (int last=col+1; last<=m; last++) {
+                // skip col
+                dp[b][last]=dp[!b][last];
+
+                // take col
+                bool ok=(last==m) || all_of(strs.begin(),strs.end(),
+                    [&](const string& s) { return s[col]<=s[last];}
+                );
+
+                if(ok)
+                    dp[b][last]=max(dp[b][last], 1+dp[!b][col]);
+            }
+        }
+        return m-dp[(m-1)&1][m];
+    }
+};
