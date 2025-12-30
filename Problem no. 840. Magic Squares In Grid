@@ -1,0 +1,65 @@
+PROBLEM     NUMBER         :                     840. Magic Squares In Grid
+
+// Tuesday, 30 December 2025
+
+
+// Hash Table
+
+class Solution {
+public:
+    int numMagicSquaresInside(vector<vector<int>>& grid) {
+        int m = grid.size(), n = grid[0].size();
+        int ans = 0;
+        for(int x = 0;x<m-2;x++){
+            for(int y = 0;y<n-2;y++){
+                bool magic = true;
+                bool mappa[16] = {false};
+                int sum = 0;
+                for(int k = 0;k<3;k++){
+                    sum += grid[x+k][y+k];
+                }
+                int curr = 0;
+                for(int k = 0;k<3;k++){
+                    curr += grid[x+k][y+2-k];
+                }
+                if(sum != curr)
+                    continue;
+                for(int i = x;i<x+3;i++){
+                    curr = 0;
+                    for(int j = y;j<y+3;j++){
+                        mappa[grid[i][j]] = true;
+                        curr += grid[i][j];
+                    }
+                    if(curr != sum){
+                        magic = false;
+                        break;
+                    }
+                }
+                if(!magic)
+                    continue;
+                
+                for(int i = 1;i<=9;i++){
+                    if(!mappa[i]){
+                        magic = false;
+                        break;
+                    }
+                }
+                if(!magic)
+                    continue;
+
+                for(int j = y;j<y+3;j++){
+                    curr = 0;
+                    for(int i = x;i<x+3;i++){
+                        curr += grid[i][j];
+                    }
+                    if(curr != sum){
+                        magic = false;
+                        break;
+                    }
+                }
+                ans += magic;
+            }
+        }
+        return ans;
+    }
+};
