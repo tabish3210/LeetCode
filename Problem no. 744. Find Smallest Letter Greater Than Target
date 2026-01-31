@@ -1,0 +1,27 @@
+PROBLEM    NUMBER                          :                                   744. Find Smallest Letter Greater Than Target
+
+
+// Saturday, 31 January 2026
+
+
+// Binary Search
+
+
+class Solution {
+public:
+    char nextGreatestLetter(vector<char>& letters, char target) {
+        if(letters.back() <= target || letters[0] > target) return letters[0];
+        int low = 0;
+        int hig = (int)letters.size() - 1;
+        while(low < hig){
+            int mid = (low + hig + 1) / 2;
+            if(letters[mid] <= target){
+                low = mid;
+            }
+            else{
+                hig = mid - 1;
+            }
+        }
+        return letters[low + 1];
+    }
+};
