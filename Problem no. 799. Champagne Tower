@@ -1,0 +1,32 @@
+PROBLEM   NUMBER    :             799. Champagne Tower
+
+
+// Saturday, 14 February 2026
+
+
+// DP
+
+class Solution {
+public:
+    double champagneTower(int poured, int query_row, int query_glass) {
+        
+        vector<double> row(101, 0.0);
+        row[0] = poured;
+        
+        for (int i = 0; i < query_row; i++) {
+            vector<double> next(101, 0.0);
+            
+            for (int j = 0; j <= i; j++) {
+                if (row[j] > 1.0) {
+                    double overflow = (row[j] - 1.0) / 2.0;
+                    next[j] += overflow;
+                    next[j + 1] += overflow;
+                }
+            }
+            
+            row = next;
+        }
+        
+        return min(1.0, row[query_glass]);
+    }
+};
