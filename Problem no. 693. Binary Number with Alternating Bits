@@ -1,0 +1,23 @@
+PROBLEM     NUMBER            :        693. Binary Number with Alternating Bits
+
+
+// Wednesday, 18 February 2026
+
+// Bit Manipulation  |  Bitmask
+
+
+class Solution {
+public:
+    bool hasAlternatingBits(unsigned n) {
+        bitset<32> B(n);
+        int mB=31-countl_zero(n);
+        bool prevB=1;// previous bit is 1
+//from 2nd most significant bit on
+// alternate the prevB
+for(int i=mB-1; i>=0; i--, prevB=!prevB){
+    if (B[i]==prevB)// adjacent bits have same value
+        return 0;// false
+}
+return 1;// no adjacent bits have same value, so return true
+    }
+};
