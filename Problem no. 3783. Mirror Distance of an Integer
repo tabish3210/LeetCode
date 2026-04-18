@@ -1,0 +1,21 @@
+PROBLEM    NUMBER                       :                                3783. Mirror Distance of an Integer
+
+
+// Saturday, 18 April 2026
+
+
+// Reverse Number
+
+class Solution {
+public:
+    int revnum(int a) {
+        if (a / 10 == 0) return a ;
+        string s = to_string(a);
+        reverse(s.begin(), s.end()) ;
+        return stoi(s) ;
+    }
+
+    int mirrorDistance(int n) {
+        return abs(n - revnum(n)) ;
+    }
+};
